@@ -25,10 +25,18 @@
 		window.addEventListener('load', init);
 		function init(){
 			container=document.querySelector('.container');
+			source=document.querySelector('.source');
+			// funciones de container
 			container.addEventListener('dragover',dragSobreContainer,false);
 			container.addEventListener('dragleave', dragSalioContainer,false);
 			container.addEventListener('drop', manejarDrop,false);
+
+			//funciones source
+			source.addEventListener('dragover',dragSobreContainer,false);
+			source.addEventListener('dragleave', dragSalioContainer,false);
+			
 			var circles=document.getElementsByClassName('circle');
+
 
 			for(i in circles){
 				var circle =circles[i];
@@ -44,6 +52,7 @@
 		}
 
 		function dragIniciado(e){
+
 			this.style.backgroundColor = 'blue';
 			elementoArrastrandose=this;
 			var padre=document.createElement('p');
@@ -59,6 +68,8 @@
 			elementoArrastrandose.parentNode.removeChild(elementoArrastrandose);
 			this.classList.remove('over');
 		}
+
+
 		function dragSobreContainer(e){
 			e.preventDefault();
 			this.classList.add('over');
