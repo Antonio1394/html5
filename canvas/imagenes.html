@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Usar Media API</title>
+    <style>
+        #c{
+          border:solid;
+          }
+
+          #video{
+            display: none;
+          }
+    </style>
+  </head>
+  <body>
+    <video id="video"></video>
+    <canvas id="c"></canvas>
+    <button id="tf">Tomar Fotos</button>
+    <img id="foto" alt="Mi Foto">
+    <script>
+
+      var ctx,canvas,bandera;
+      window.addEventListener('load',init);
+
+      window.requestAnimationFrame = (function(){
+      return window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+
+      function (f){
+          window.setTimeout(f,1000/60);
+        }
+      })();
+
+      function init(){
+          var video = document.getElementById('video');
+          var boton = document.getElementById('tf');
+          boton.addEventListener('click',tomarFoto);
+          navigator.getUserMedia=(
+          navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia ||
+          navigator.msGetUserMedia
+        );
+
+        if(navigator.getUserMedia){
+            navigator.getUserMedia({video:true}, function(stream){
+              video.src=window.URL.createObjectURL(stream);
+              video.play();
+            },
+              function(e){
+                console.log(e);
+              });
+        }else{
+          alert("tu navegador no lo soporta");
+        }
+        canvas=document.getElementById('c');
+        ctx=canvas.getContext('2d');
+        video.addEventListener('loadedmetadata',function(){
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          bandera=true;
+          draw();
+        },false);
+      }
+
+      function draw (){
+          ctx.drawImage(video,0,0);
+          requestAnimationFrame(draw);
+      }
+
+      function tomarFoto(){
+          if(!bandera){
+            alert('No puedes tomar Foto');
+            return;
+          }
+          var imgData=canvas.toDataURL('image/png');
+          document.getElementById('foto').setAttribute('src',imgData);
+      }
+    </script>
+
+  </body>
+</html>
